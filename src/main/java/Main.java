@@ -1,14 +1,16 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /*
 Описание:
-Есть список дозировок Dosing внутри которых списки планов List<PlanDosing>.
-Dosing содержит StringId и List<PlanDosing>
+Есть список дозировок List<Dosing> внутри которых списки планов List<PlanDosing>.
 PlanDosing содержит StringId
+Dosing содержит StringId и List<PlanDosing>
 
 Задача:
-1. Нужно разделить Dosing список по уникальным id из списка PlanDosing.
+0. Создать список List<Dosing> и на полнить его
+1. Нужно разделить Dosing список по уникальным id  PlanDosing.
 2. На выходе Map<id, List<Dosing>> result
 
 Пример:
@@ -29,126 +31,68 @@ PlanDosing содержит StringId
  */
 
 
-class Dosing {
-    String id;
-    List<PlanDosing> planDosingList = new ArrayList<>();
+class PlanDosing {
+    private String id;
 
+    public PlanDosing(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "PlanDosing{" +
+                "Id=" + id +
+                '}';
+    }
+}
+
+class Dosing {
+    private String id;
+    private List<PlanDosing> planDosingList;
 
     public Dosing(String id, List<PlanDosing> planDosingList) {
         this.id = id;
         this.planDosingList = planDosingList;
     }
 
-    public Dosing() {
-    }
-
-    @Override
-    public String toString() {
-        return "Dosing{" +
-                "id='" + id + '\'' +
-                ", planDosingList=" + planDosingList +
-                '}';
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public List<PlanDosing> getPlanDosingList() {
         return planDosingList;
     }
 
-    public void addPlanDosing(PlanDosing planDosing) {
-        this.planDosingList.add(planDosing);
-    }
-
-    public void setPlanDosingList(List<PlanDosing> planDosingList) {
-        this.planDosingList = planDosingList;
-    }
-}
-
-class PlanDosing {
-    String id;
-
-    public PlanDosing(String id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
-        return "PlanDosing{" +
-                "id='" + id + '\'' +
-                '}';
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        return
+                "planDosingList=" + planDosingList +
+                        '}';
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        // Планы дозировок
-        PlanDosing one = new PlanDosing("1");
-        PlanDosing two = new PlanDosing("2");
-        PlanDosing three = new PlanDosing("3");
-        PlanDosing four = new PlanDosing("4");
+        List<Dosing> dosings = new ArrayList<>();
+        List<PlanDosing> firstPlan = Arrays.asList(new PlanDosing("1"), new PlanDosing("2"), new PlanDosing("3"));
+        List<PlanDosing> secondPlan = Arrays.asList(new PlanDosing("2"), new PlanDosing("3"), new PlanDosing("4"));
+        List<PlanDosing> thirdPlan = Arrays.asList(new PlanDosing("3"), new PlanDosing("4"), new PlanDosing("1"));
+        dosings.add(new Dosing("1", firstPlan));
+        dosings.add(new Dosing("2", secondPlan));
+        dosings.add(new Dosing("3", thirdPlan));
 
-        // Списки планов
-        List<PlanDosing> firstPlan = Arrays.asList(one, two, three); // 1,2,3
-        List<PlanDosing> secondPlan = Arrays.asList(two, three, four); // 2,3,4
-        List<PlanDosing> thirdPlan = Arrays.asList(three, four, one); // 3,4,1
+        Map<String, List<Dosing>> resultMap = dosings.stream()
+                .flatMap(dosing -> dosing.getPlanDosingList().stream()
+                        .map(planDosing -> new AbstractMap.SimpleEntry<>(planDosing.getId(), dosing)))
+                .collect(Collectors.groupingBy(Map.Entry::getKey,
+                        Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
-
-//        // dosing1 содержит firstPlan(1,2,3) и thirdPlan(3,4,1)
-//        // тк 1 есть в firstPlan и thirdPlan
-//        Dosing dosing1 = new Dosing();
-//        dosing1.setId("1");
-//        firstPlan.forEach(dosing1::addPlanDosing);
-//        thirdPlan.forEach(dosing1::addPlanDosing);
-//
-//
-//        // dosing2 содержит firstPlan(1,2,3) и secondPlan(2,3,4)
-//        // тк 2 есть в firstPlan и secondPlan
-//        Dosing dosing2 = new Dosing();
-//        dosing2.setId("2");
-//        firstPlan.forEach(dosing2::addPlanDosing);
-//        secondPlan.forEach(dosing2::addPlanDosing);
-//
-//
-//        // dosing3 содержит firstPlan(1,2,3) secondPlan(2,3,4) и thirdPlan(3,4,1)
-//        // тк 3 есть в firstPlan, secondPlan и thirdPlan
-//        Dosing dosing3 = new Dosing();
-//        dosing3.setId("3");
-//        firstPlan.forEach(dosing3::addPlanDosing);
-//        secondPlan.forEach(dosing3::addPlanDosing);
-//        thirdPlan.forEach(dosing3::addPlanDosing);
-
-        Map<String, Dosing> result = new HashMap<>();
-        result.put("1", createDosing("1", firstPlan, thirdPlan));
-        result.put("2", createDosing("2", firstPlan, secondPlan));
-        result.put("3", createDosing("3", firstPlan, secondPlan, thirdPlan));
-
-
-        result.forEach((id, dosing) ->
-                System.out.println(dosing));
-
-    }
-
-    public static Dosing createDosing(String id, List<PlanDosing>... planLists) {
-        Dosing dosing = new Dosing();
-        dosing.setId(id);
-        Arrays.stream(planLists)
-                .flatMap(Collection::stream)
-                .forEach(dosing::addPlanDosing);
-        return dosing;
+        resultMap.forEach((id, dosingList) ->
+                System.out.println("Map <" + id + ", List<Dosing>> -> " + dosingList));
     }
 }
+
