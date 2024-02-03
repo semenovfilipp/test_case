@@ -1,3 +1,7 @@
+import jdk.jshell.execution.Util;
+
+import java.util.Scanner;
+
 class Calculator {
 
     public static int sum(int a, int b){
@@ -7,6 +11,8 @@ class Calculator {
 
     public static int mult(int a, int b) {
         // write your code here
-        return 0;
+        return a*b;
     }
+
+
 }

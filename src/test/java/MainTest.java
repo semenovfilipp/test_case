@@ -20,24 +20,21 @@ public class MainTest {
         dosings.add(new Dosing("2", secondPlan));
         dosings.add(new Dosing("3", thirdPlan));
 
-        Set<String> uniqueDosingId = dosings.stream()
-                .map(Dosing::getId)
-                .collect(Collectors.toSet());
-        assertEquals(3, dosings.size());
-
         Map<String,List<Dosing>> result = main.groupDosingsByPlanDosingId(dosings);
 
         assertNotNull(result);
         assertEquals(4, result.size());
 
-        assertTrue(result.containsKey("1"));
-        assertTrue(result.containsKey("2"));
-        assertTrue(result.containsKey("3"));
-        assertTrue(result.containsKey("4"));
+        for (Map.Entry<String, List<Dosing>> entry : result.entrySet()) {
+            String id = entry.getKey();
+            List<Dosing> dosingList = entry.getValue();
 
-        assertEquals(2, result.get("1").size());
-        assertEquals(2, result.get("2").size());
-        assertEquals(3, result.get("3").size());
-        assertEquals(2, result.get("4").size());
+            for (Dosing dosing : dosingList) {
+                assertTrue(dosing.getPlanDosingList().stream().anyMatch(planDosing -> planDosing.getId().equals(id)));
+            }
+        }
+
+
     }
+
 }

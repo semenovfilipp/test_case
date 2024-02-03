@@ -93,8 +93,8 @@ public class Main {
                 .collect(Collectors.groupingBy(Map.Entry::getKey,
                         Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
-//        resultMap.forEach((id, dosingList) ->
-//                System.out.println("Map <" + id + ", List<Dosing>> -> " + dosingList));
+        resultMap.forEach((id, dosingList) ->
+                System.out.println("Map <" + id + ", List<Dosing>> -> " + dosingList));
     }
     public Map<String, List<Dosing>> groupDosingsByPlanDosingId(List<Dosing> dosings) {
         return dosings.stream()
