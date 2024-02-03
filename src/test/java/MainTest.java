@@ -22,6 +22,10 @@ public class MainTest {
         dosings.add(new Dosing("2", secondPlan));
         dosings.add(new Dosing("3", thirdPlan));
 
+        List<String> allPlanId = dosings.stream()
+                .flatMap(dosing -> dosing.getPlanDosingList().stream())
+                .map(PlanDosing::getId).toList();
+
         Map<String,List<Dosing>> result = main.groupDosingsByPlanDosingId(dosings);
 
         assertNotNull(result);
