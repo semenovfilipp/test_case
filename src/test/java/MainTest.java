@@ -1,9 +1,7 @@
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.testng.AssertJUnit.*;
 
@@ -22,9 +20,10 @@ public class MainTest {
         dosings.add(new Dosing("2", secondPlan));
         dosings.add(new Dosing("3", thirdPlan));
 
-        List<String> allPlanId = dosings.stream()
-                .flatMap(dosing -> dosing.getPlanDosingList().stream())
-                .map(PlanDosing::getId).toList();
+        Set<String> uniqueDosingId = dosings.stream()
+                .map(Dosing::getId)
+                .collect(Collectors.toSet());
+        assertEquals(3, dosings.size());
 
         Map<String,List<Dosing>> result = main.groupDosingsByPlanDosingId(dosings);
 
