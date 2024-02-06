@@ -2,34 +2,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-/*
-Описание:
-Есть список дозировок List<Dosing> внутри которых списки планов List<PlanDosing>.
-PlanDosing содержит StringId
-Dosing содержит StringId и List<PlanDosing>
-
-Задача:
-0. Создать список List<Dosing> и на полнить его
-1. Нужно разделить Dosing список по уникальным id  PlanDosing.
-2. На выходе Map<id, List<Dosing>> result
-
-Пример:
- List<PlanDosing> firstPlan = new ArrayList<>(); // 1,2,3
- List<PlanDosing> secondPlan = new ArrayList<>(); // 2,3,4
- List<PlanDosing> thirdPlan = new ArrayList<>(); // 3,4,1
- -------
- Будет:
- Map <1, List<Dosing>> -> List<Dosing> будет содержать внутри PlanDosing
- -> fistPlan/thirdPlan, тк id 1 есть в  fistPlan и thirdPlan
- ///
- Map <2, List<Dosing>> -> List<Dosing> будет содержать внутри PlanDosing
- ->  firstPlan/secondPlan, тк id 2 есть в  firstPlan и secondPlan
- ///
- Map <3, List<Dosing>> -> List<Dosing> будет содержать внутри PlanDosing
- -> firstPlan/secondPlan/thirdPlan, тк id 3 есть в  firstPlan и secondPlan и thirdPlan
- ---------
- */
-
 
 class PlanDosing {
     private String id;
